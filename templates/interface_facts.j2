@@ -1,0 +1,12 @@
+{% for intf in interface_facts %}
+{% for intf_key,intf_value in intf.items() %}
+{{intf_key.upper()}}:
+---------------------
+{% for k,v in intf_value.items() %}
+Description: {{v.description}}
+Name: {{v.name}}
+MTU: {{v.mtu}}
+
+{% endfor %}
+{% endfor %}
+{% endfor %}

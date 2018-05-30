@@ -1,0 +1,30 @@
+---
+- hosts: cisco
+  gather_facts: no
+  connection: network_cli
+
+  roles:
+    - ansible-network.network-engine
+
+  tasks:
+  - name: Capture show interfaces
+    ios_command:
+      commands:
+        - show interfaces
+    register: interface_output
+
+  - name: "command_parser test for {{ ansible_network_os }} show_interface"
+    command_parser:
+      file: "parsers/show_interfaces.yaml"
+      content: "{{interface_output.stdout[0]}}"
+    register: result
+    # vars:
+    #   - ansible_network_os: ios
+
+  - debug:
+      msg: "{{interface_facts}}"
+
+  - name: Generate Dynamic Report
+    template:
+      src: templates/interface_facts.j2
+      dest: reports/{{inventory_hostname}}.md

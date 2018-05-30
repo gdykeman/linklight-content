@@ -1,0 +1,190 @@
+Building configuration...
+
+Current configuration : 3870 bytes
+!
+! Last configuration change at 18:36:30 UTC Wed May 30 2018 by ec2-user
+!
+version 16.5
+service timestamps debug datetime msec
+service timestamps log datetime msec
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+platform console virtual
+!
+hostname rtr2
+!
+boot-start-marker
+boot-end-marker
+!
+!
+logging persistent size 1000000 filesize 8192 immediate
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+! 
+! 
+! 
+! 
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-3352329686
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-3352329686
+ revocation-check none
+ rsakeypair TP-self-signed-3352329686
+!
+!
+crypto pki certificate chain TP-self-signed-3352329686
+ certificate self-signed 01
+  30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 05050030 
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 33333532 33323936 3836301E 170D3138 30353330 31353239 
+  34365A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649 
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D33 33353233 
+  32393638 36308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201 
+  0A028201 0100CBF1 BEBD56D1 392E56AA FFEF2D6B D8E06C0B 28B35D94 88082813 
+  44713FE8 DE125220 C271F021 8F8F50F2 E0ADC51E B2215AFF CBBB75A7 0FB080EF 
+  1FEE811F B3E44B4A 3482D075 A935CFB6 21EC0179 F64BEDE8 92D53022 EC708192 
+  34F0E3A3 9D8FE25C C39833B7 FF535BD3 9A03C3AD 65950EBC CC691B22 32DACBD9 
+  ED6E5016 746EA0F6 B23001CD CF57C62F 38EBE8D4 9B2EBC80 4BD44171 FEC58FC7 
+  B9815834 517AA589 73067C33 41E2B20D 3B2DE771 5B96E048 78831592 BF6F37E0 
+  750AF106 C8254774 BFE2F942 EBFAEAC3 991C62CF F51E9A0C F17D4EDA D8FF5847 
+  4373E13D 39C9934E 4D263D9C 3E4F86E7 5C5CAE83 18B18FAF 67C1142D 189ABED8 
+  A4788DAB 1C150203 010001A3 53305130 0F060355 1D130101 FF040530 030101FF 
+  301F0603 551D2304 18301680 1401DF8A 9A894698 7FA38ABE 6863D8E4 196575A0 
+  95301D06 03551D0E 04160414 01DF8A9A 8946987F A38ABE68 63D8E419 6575A095 
+  300D0609 2A864886 F70D0101 05050003 82010100 3C657415 3FEAA8B6 1CADB3DC 
+  9AB61097 CC97ED52 981CEBBF F9658C36 358C506A 9E0DAACF AD528D9A F48A3D10 
+  C4092341 0E63419C 01553C5E CDF297D6 870994B8 B4B0EE26 2728D49A 8FD64A52 
+  76774431 CA4813F1 3DB3727D BC0696EE 3AD077CA C69C52A7 E6F04288 1FC62222 
+  3701BED9 433C1B26 0E92B370 3544963B FE6928D5 B144C5FD E6A2877B 00776488 
+  1F9AECC1 64FC359E 18BD0D29 42ACFC40 69C9D804 A14A5E19 7CC405D9 D0F23CBB 
+  7CD84222 ADC0B035 78F96ABA A76AB8E4 C1991571 A2CED5E4 2586E6BF 8FCE3FED 
+  7A1092F5 470252B9 72D2FB65 E757C011 9D9EEDD0 B39660C4 B0E775DE 43D09AF4 
+  9F4E2722 C8677000 F9DBE104 D9402763 EB5C11B2
+  	quit
+!
+!
+!
+!
+!
+!
+!
+!
+license udi pid CSR1000V sn 97JANW4RJXB
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+username ec2-user privilege 15 secret 5 $1$j9VP$ZlVHZ1ByY8c.8lXyeqIVb.
+!
+redundancy
+!
+!
+!
+crypto ikev2 limit queue sa-init 5000
+!
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+!
+!
+interface GigabitEthernet1
+ ip address dhcp
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+
+threat-visibility
+!
+virtual-service csr_mgmt
+ ip shared host-interface GigabitEthernet1
+ activate
+!
+ip forward-protocol nd
+ip tcp window-size 131072
+ip http server
+ip http authentication local
+ip http secure-server
+ip route 0.0.0.0 0.0.0.0 GigabitEthernet1 172.17.0.1
+!
+ip ssh window-size 131072
+ip ssh rsa keypair-name ssh-key
+ip ssh version 2
+ip ssh pubkey-chain
+  username ec2-user
+   key-hash ssh-rsa 84242867671CEE117DE7FDD2A9A03CCE ec2-user
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip scp server enable
+!
+!
+!
+!
+!
+control-plane
+!
+ !
+ !
+ !
+ !
+!
+!
+!
+!
+!
+line con 0
+ stopbits 1
+line vty 0 4
+ login local
+ transport input ssh
+!
+!
+!
+!
+!
+!
+end
