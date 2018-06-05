@@ -12,7 +12,6 @@
     ios_command:
       commands:
         - show interfaces
-        - show ip route
     register: output
 
 
@@ -23,24 +22,7 @@
     register: result
 
 
-  - name: "textfsm_parser test for {{ ansible_network_os }} show_ip_route"
-    textfsm_parser:
-      file: "parsers/show_ip_route.template"
-      content: "{{ output.stdout[1] }}"
-      name: route_facts
-    register: route
-
-  - name: Sort the routes based on protocol
-    set_fact:
-      sorted_routes: "{{ route_facts | sort_routes }}"
-
   - name: Generate Interfaces Report
     template:
       src: templates/interface_facts.j2
       dest: reports/{{inventory_hostname}}-interfaces.md
-
-
-  - name: Generate IP Route Report
-    template:
-      src: templates/route_facts.j2
-      dest: reports/{{inventory_hostname}}-routes.md
