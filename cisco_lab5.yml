@@ -20,12 +20,12 @@
       content: "{{ output.stdout[1] }}"
       name: route_facts
     register: route
-
-  - name: Sort the routes based on protocol
-    set_fact:
-      sorted_routes: "{{ route_facts | sort_routes }}"
+  #
+  # - name: Sort the routes based on protocol
+  #   set_fact:
+  #     sorted_routes: "{{ route_facts | sort_routes }}"
 
   - name: Generate IP Route Report
     template:
-      src: templates/route_facts.j2
+      src: templates/ip_route.j2
       dest: reports/{{inventory_hostname}}-routes.md
