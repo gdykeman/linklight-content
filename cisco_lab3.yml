@@ -1,17 +1,10 @@
 ---
 - name: RESTORE CONFIGURATION
-  hosts: cisco
+  hosts: routers
   connection: network_cli
   gather_facts: no
 
   tasks:
-    ### SSH into router and change hostname or create a loopback ###
-    # - name: CHECK TO SEE IF THERE IS A DIFF
-    #   ios_config:
-    #     diff_against: intended
-    #     intended_config: "{{ lookup('file', './backup/{{inventory_hostname}}.config')}}"
-    #   tags: diff
-
     - name: COPY RUNNING CONFIG TO ROUTER
       command: scp ./backup/{{inventory_hostname}}.config {{inventory_hostname}}:/{{inventory_hostname}}.config
       tags: scp

@@ -1,6 +1,6 @@
 ---
 - name: BACKUP ROUTER CONFIGURATIONS
-  hosts: cisco
+  hosts: routers
   connection: network_cli
   gather_facts: no
 

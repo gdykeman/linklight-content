@@ -1,5 +1,6 @@
 ---
-- hosts: cisco
+- name: Dynamic Reporting
+  hosts: routers
   gather_facts: no
   connection: network_cli
 
@@ -11,20 +12,36 @@
     ios_command:
       commands:
         - show interfaces
-    register: interface_output
+        - show ip route
+    register: output
+
 
   - name: "command_parser test for {{ ansible_network_os }} show_interface"
     command_parser:
       file: "parsers/show_interfaces.yaml"
-      content: "{{interface_output.stdout[0]}}"
+      content: "{{ output.stdout[0] }}"
     register: result
-    # vars:
-    #   - ansible_network_os: ios
+
+
+  - name: "textfsm_parser test for {{ ansible_network_os }} show_ip_route"
+    textfsm_parser:
+      file: "parsers/show_ip_route.template"
+      content: "{{ output.stdout[1] }}"
+      name: route_facts
+    register: route
+
+  - debug:
+      msg: "{{route}}"
 
   - debug:
       msg: "{{interface_facts}}"
 
-  - name: Generate Dynamic Report
+  - name: Generate Interfaces Report
     template:
       src: templates/interface_facts.j2
-      dest: reports/{{inventory_hostname}}.md
+      dest: reports/{{inventory_hostname}}-interfaces.md
+
+  - name: Generate IP Route Report
+    template:
+      src: templates/route_facts.j2
+      dest: reports/{{inventory_hostname}}-routes.md

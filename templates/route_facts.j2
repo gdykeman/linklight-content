@@ -1,0 +1,19 @@
+{% for route in route_facts %}
+{% if route.PROTOCOL == "S" %}
+{% set protocol = "STATIC" %}
+{% elif route.PROTOCOL == "C" %}
+{% set protocol = "CONNECTED" %}
+{% elif route.PROTOCOL == "O" %}
+{% set protocol = "OSPF" %}
+{% elif route.PROTOCOL == "B" %}
+{% set protocol = "BGP" %}
+{% elif route.PROTOCOL == "L" %}
+{% set protocol = "LOCAL" %}
+{% endif %}
+{{ protocol }}
+---------------------
+NETWORK: {{ route.NETWORK }}
+NEXTHOP_IF: {{ route.NEXTHOP_IF }}
+NEXTHOP_IP: {{ route.NEXTHOP_IP }}
+
+{% endfor %}
