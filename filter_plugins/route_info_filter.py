@@ -14,43 +14,52 @@ ANSIBLE_METADATA = {
 
 
 from ansible.errors import AnsibleFilterError
-from ansible.module_utils.six.moves.urllib.parse import urlsplit
 from ansible.utils import helpers
+from copy import deepcopy
 
 
-def sort_routes(route_list, alias='routeinfo_filter'):
+def routeinfo_filter(route_list, alias='routeinfo_filter'):
 
+    # Initialize empty  dict
+    # This should result in route_type = { 'static': [ { 'network':
+    # 1.1.1.1, nexthop: 2.2.2.2 }, { 'network': 101.1.1.1, nexthop:
+    # 2.2.2.2}], 'bgp': [{' network': x.x.x.x, etc}], 'ospf': [] etc}
     route_type = {}
-    route_list = []
+    static_routes = []
+    bgp_routes = []
+    ospf_routes = []
+    connected_routes = []
+    local_routes = []
+    other_routes = []
     for route in route_list:
         if route.get('PROTOCOL') == 'S':
-            route_list['static'] = route
+            static_routes.append(route)
         elif route.get('PROTOCOL') == 'B':
-            route_list['bgp'] = route
+            bgp_routes.append(route)
         elif route.get('PROTOCOL') == 'O':
-            route_list['ospf'] = route
-        elif route.get('PROTOCOL') == 'L':
-            route_list['local'] = route
+            ospf_routes.append(route)
         elif route.get('PROTOCOL') == 'C':
-            route_list['connected'] = route
-            
-    results = helpers.object_to_dict(urlsplit(value), exclude=['count', 'index', 'geturl', 'encode'])
+            connected_routes.append(route)
+        elif route.get('PROTOCOL') == 'L':
+            local_routes.append(route)
+        else:
+            other_routes.append(route)
 
-    # If a query is supplied, make sure it's valid then return the results.
-    # If no option is supplied, return the entire dictionary.
-    if query:
-        if query not in results:
-            raise AnsibleFilterError(alias + ': unknown URL component: %s' % query)
-        return results[query]
-    else:
-        return results
+    route_type['static'] = static_routes
+    route_type['bgp'] = bgp_routes
+    route_type['ospf'] = ospf_routes
+    route_type['connected'] = connected_routes
+    route_type['local'] = local_routes
+    route_type['other'] = other_routes
+
+    return route_type
 
 
 # ---- Ansible filters ----
 class FilterModule(object):
-    ''' URI filter '''
+    ''' Route info  filter '''
 
     def filters(self):
         return {
-            'route_info': sort_routes
+            'sort_routes': routeinfo_filter
         }

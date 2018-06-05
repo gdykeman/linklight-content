@@ -1,19 +1,71 @@
-{% for route in route_facts %}
-{% if route.PROTOCOL == "S" %}
-{% set protocol = "STATIC" %}
-{% elif route.PROTOCOL == "C" %}
-{% set protocol = "CONNECTED" %}
-{% elif route.PROTOCOL == "O" %}
-{% set protocol = "OSPF" %}
-{% elif route.PROTOCOL == "B" %}
-{% set protocol = "BGP" %}
-{% elif route.PROTOCOL == "L" %}
-{% set protocol = "LOCAL" %}
-{% endif %}
-{{ protocol }}
----------------------
-NETWORK: {{ route.NETWORK }}
-NEXTHOP_IF: {{ route.NEXTHOP_IF }}
-NEXTHOP_IP: {{ route.NEXTHOP_IP }}
+{% if sorted_routes.get('static') %}
+STATIC:
+-------
+  {% for route in sorted_routes.static %}
 
-{% endfor %}
+  Network: {{ route.NETWORK }}
+  Nexthop IP: {{ route.NEXTHOP_IP }}
+  Nexthop Interface: {{ route.NEXTHOP_IF }}
+  Metric: {{ route.METRIC }}
+  {% endfor %}
+{% endif %}
+
+{% if sorted_routes.get('connected') %}
+CONNECTED:
+-------
+  {% for route in sorted_routes.connected %}
+
+  Network: {{ route.NETWORK }}
+  Nexthop IP: {{ route.NEXTHOP_IP }}
+  Nexthop Interface: {{ route.NEXTHOP_IF }}
+  Metric: {{ route.METRIC }}
+  {% endfor %}
+{% endif %}
+
+{% if sorted_routes.get('local') %}
+LOCAL:
+-------
+  {% for route in sorted_routes.local %}
+
+  Network: {{ route.NETWORK }}
+  Nexthop IP: {{ route.NEXTHOP_IP }}
+  Nexthop Interface: {{ route.NEXTHOP_IF }}
+  Metric: {{ route.METRIC }}
+  {% endfor %}
+{% endif %}
+
+{% if sorted_routes.get('bgp') %}
+BGP:
+-------
+  {% for route in sorted_routes.bgp %}
+
+  Network: {{ route.NETWORK }}
+  Nexthop IP: {{ route.NEXTHOP_IP }}
+  Nexthop Interface: {{ route.NEXTHOP_IF }}
+  Metric: {{ route.METRIC }}
+  {% endfor %}
+{% endif %}
+
+{% if sorted_routes.get('ospf') %}
+OSPF:
+-------
+  {% for route in sorted_routes.ospf %}
+
+  Network: {{ route.NETWORK }}
+  Nexthop IP: {{ route.NEXTHOP_IP }}
+  Nexthop Interface: {{ route.NEXTHOP_IF }}
+  Metric: {{ route.METRIC }}
+  {% endfor %}
+{% endif %}
+
+{% if sorted_routes.get('other') %}
+OTHER:
+-------
+  {% for route in sorted_routes.other %}
+
+  Network: {{ route.NETWORK }}
+  Nexthop IP: {{ route.NEXTHOP_IP }}
+  Nexthop Interface: {{ route.NEXTHOP_IF }}
+  Metric: {{ route.METRIC }}
+  {% endfor %}
+{% endif %}

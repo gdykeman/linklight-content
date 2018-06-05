@@ -30,16 +30,15 @@
       name: route_facts
     register: route
 
-  - debug:
-      msg: "{{route}}"
-
-  - debug:
-      msg: "{{interface_facts}}"
+  - name: Sort the routes based on protocol
+    set_fact:
+      sorted_routes: "{{ route_facts | sort_routes }}"
 
   - name: Generate Interfaces Report
     template:
       src: templates/interface_facts.j2
       dest: reports/{{inventory_hostname}}-interfaces.md
+
 
   - name: Generate IP Route Report
     template:
