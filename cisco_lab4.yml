@@ -14,7 +14,6 @@
         - show interfaces
     register: output
 
-
   - name: "command_parser test for {{ ansible_network_os }} show_interface"
     command_parser:
       file: "parsers/show_interfaces.yaml"
