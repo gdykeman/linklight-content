@@ -8,5 +8,7 @@ useful information about a test network. You will create a
 
 
 [Section 1: Exploring the lab environment](./Lab1_section3.md)
+
 [Section 2: Writing your first playbook](./Lab1_section2.md)
+
 [Section 3 - Module documentation, Registering output & tags](./Lab1_section3.md)
