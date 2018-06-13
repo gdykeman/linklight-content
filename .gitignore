@@ -3,3 +3,6 @@ gdykeman-network-private.pem
 gdykeman-test-private.pem
 backup/
 reports/
+ansible.cfg
+.gitignore
+
