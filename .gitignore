@@ -1,8 +1,0 @@
-hosts.txt
-gdykeman-network-private.pem
-gdykeman-test-private.pem
-backup/
-reports/*
-!reports/.gitkeep 
-ansible.cfg
-.gitignore
