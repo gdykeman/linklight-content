@@ -13,7 +13,7 @@
         msg: "{{whoami}}"
 
     - name: COPY RUNNING CONFIG TO ROUTER
-      command: scp -i /home/ec2-user/.ssh/aws-private.pem ./backup/{{inventory_hostname}}.config ec2-user@{{inventory_hostname}}:/{{inventory_hostname}}.config
+      command: scp ./backup/{{inventory_hostname}}.config ec2-user@{{inventory_hostname}}:/{{inventory_hostname}}.config
       tags: scp
 
     - name: CONFIG REPLACE
