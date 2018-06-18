@@ -5,13 +5,6 @@
   gather_facts: no
 
   tasks:
-    - name: whoami
-      command: whoami
-      register: whoami
-
-    - debug:
-        msg: "{{whoami}}"
-
     - name: COPY RUNNING CONFIG TO ROUTER
       command: scp ./backup/{{inventory_hostname}}.config ec2-user@{{inventory_hostname}}:/{{inventory_hostname}}.config
       tags: scp
