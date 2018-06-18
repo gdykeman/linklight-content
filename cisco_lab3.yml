@@ -9,7 +9,7 @@
         msg: "{{ansible_user}}"
 
     - debug:
-        msg: "{{ansible_ssh_pass}}"
+        msg: "{{ansible_ssh_private_key_file}}"
 
     - name: COPY RUNNING CONFIG TO ROUTER
       command: scp ./backup/{{inventory_hostname}}.config {{inventory_hostname}}:/{{inventory_hostname}}.config
