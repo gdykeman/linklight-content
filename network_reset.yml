@@ -13,9 +13,8 @@
       - example.net
 
   tasks:
-    - name: CONFIGURE THE HOSTNAME AND DOMAIN NAME
+    - name: REMOVE THE HOSTNAME AND DOMAIN NAME
       net_system:
-        hostname: "{{ inventory_hostname }}"
         domain_name: "{{ site_domain_name }}"
         domain_search: "{{ network_domain_search | default(omit) }}"
         name_servers: "{{ network_name_servers | default(omit) }}"
