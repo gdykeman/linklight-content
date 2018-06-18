@@ -5,6 +5,13 @@
   gather_facts: no
 
   tasks:
+    - name: whoami
+      command: whoami
+      register: whoami
+
+    - debug:
+        msg: "{{whoami}}"
+        
     - debug:
         msg: "{{ansible_user}}"
 
