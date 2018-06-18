@@ -5,6 +5,12 @@
   gather_facts: no
 
   tasks:
+    - debug:
+        msg: "{{ansible_user}}"
+
+    - debug:
+        msg: "{{ansible_ssh_pass}}"
+
     - name: COPY RUNNING CONFIG TO ROUTER
       command: scp ./backup/{{inventory_hostname}}.config {{inventory_hostname}}:/{{inventory_hostname}}.config
       tags: scp
