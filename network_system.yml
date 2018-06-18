@@ -1,7 +1,9 @@
 ---
 - name: CONFIGURE SYSTEM CONFIGURATIONS
   hosts: routers
+  connection: network_cli
   gather_facts: no
+
   vars:
     site_domain_name: 'example.net'
     network_name_servers:
