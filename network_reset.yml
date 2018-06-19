@@ -19,3 +19,10 @@
         domain_search: "{{ network_domain_search | default(omit) }}"
         name_servers: "{{ network_name_servers | default(omit) }}"
         state: absent
+
+    - name: ADD HOSTNAME
+      ios_config:
+        lines:
+          - hostname {{ inventory_hostname }}
+          - no banner login
+          - no banner motd
