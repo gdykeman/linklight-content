@@ -305,7 +305,7 @@ rtr4                       : ok=2    changed=1    unreachable=0    failed=0
 
 ```
 
-n
+
 
 
 ## Scenario 2 - Backing up the router configuration
