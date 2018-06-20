@@ -1,7 +1,7 @@
 # Lab 4: Using Ansible to collect and report router information
 
 
-In this lab you will learn to use the `template` module to pass collected data from devices to a Jinja2 template. The template module then renders the output as a `markdown` file.
+In this lab you will learn how to use the `template` module to pass collected data from devices to a Jinja2 template. The template module then renders the output as a `markdown` file.
 
 
 
@@ -289,7 +289,8 @@ RTR4
 
 ```
 
+> Note: Markdown files can be rendered visually as HTML
 
-Markdown files can be rendered visually as HTML and at this point with 3 small tasks you have an OS report on all the IOS devices in your network. This is a very basic example but the principle remaining the same, you can build status reports and dashboards that rely on the output of device show commands.
+At this point, with 3 small tasks, you have an OS report on all the IOS devices in your network. This is a simple example but the principle remains as you expand upon the capabilities.  For example, you can build status reports and dashboards that rely on the output of device show commands.
 
-Ansible provides tools and methods to extend the idea of network automation from mere configuration management to quite robust documentation and reporting as well.
+Ansible provides the tools and methods to extend network automation beyond configuration management to more robust capabilities, such as, generating documentation and or reports.
