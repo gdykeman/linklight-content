@@ -2,13 +2,13 @@
 
 #### Step 1
 
-Nagigate to the `networking-workshop` directory.
+Navigate to the `networking-workshop` directory.
 
 
-``` 
+```
 [student1@ip-172-16-101-121 ~]$ cd networking-workshop/
-[student1@ip-172-16-101-121 networking-workshop]$ 
-[student1@ip-172-16-101-121 networking-workshop]$ 
+[student1@ip-172-16-101-121 networking-workshop]$
+[student1@ip-172-16-101-121 networking-workshop]$
 
 ```
 
@@ -17,7 +17,7 @@ Nagigate to the `networking-workshop` directory.
 Run the `ansible` command with the `--version` command to look at what is configured:
 
 
-``` 
+```
 [student1@ip-172-16-101-121 networking-workshop]$ ansible --version
 ansible 2.5.0
   config file = /home/student1/.ansible.cfg
@@ -25,7 +25,7 @@ ansible 2.5.0
   ansible python module location = /usr/lib/python2.7/site-packages/ansible
   executable location = /usr/bin/ansible
   python version = 2.7.5 (default, May  3 2017, 07:55:04) [GCC 4.8.5 20150623 (Red Hat 4.8.5-14)]
-[student1@ip-172-16-101-121 networking-workshop]$ 
+[student1@ip-172-16-101-121 networking-workshop]$
 
 
 ```
@@ -37,18 +37,18 @@ This command gives you information about the version of Ansible, location of the
 
 #### Step 3
 
-Use the `cat` command to view the contents of the `ansible.cfg` file. 
+Use the `cat` command to view the contents of the `ansible.cfg` file.
 
 
 ```
-[student1@ip-172-16-101-121 networking-workshop]$ cat /home/student1/.ansible.cfg 
+[student1@ip-172-16-101-121 networking-workshop]$ cat /home/student1/.ansible.cfg
 [defaults]
 connection = smart
 timeout = 60
 inventory = /home/student1/networking-workshop/lab_inventory/hosts
 host_key_checking = False
 private_key_file = /home/student1/.ssh/aws-private.pem
-[student1@ip-172-16-101-121 networking-workshop]$ 
+[student1@ip-172-16-101-121 networking-workshop]$
 
 ```
 
@@ -61,12 +61,12 @@ Note the following parameters within the `ansible.cfg` file:
 
 #### Step 4
 
-The scope of a `play` within a `playbook` is limited to the groups of hosts declared within an Ansible **inventory**. Ansible supports multiple [inventory](http://docs.ansible.com/ansible/latest/intro_inventory.html) types. An inventory could be a simple flat file with a collection of hosts defined within it or it could be a dynamic script (potentially quering a CMDB backend) that generates a list of devices to run the playbook against.
+The scope of a `play` within a `playbook` is limited to the groups of hosts declared within an Ansible **inventory**. Ansible supports multiple [inventory](http://docs.ansible.com/ansible/latest/intro_inventory.html) types. An inventory could be a simple flat file with a collection of hosts defined within it or it could be a dynamic script (potentially querying a CMDB backend) that generates a list of devices to run the playbook against.
 
 In this lab you will work with a file based inventory written in the **ini** format. Use the `cat` command to view the contents of your inventory:
 
 
-``` 
+```
 
 [student1@ip-172-16-101-121 networking-workshop]$ cat /home/student1/networking-workshop/lab_inventory/hosts
 [all:vars]
@@ -102,7 +102,7 @@ host1 ansible_host=35.153.176.127 ansible_ssh_user=ec2-user private_ip=172.17.65
 
 [control]
 ansible ansible_host=34.239.141.34 ansible_ssh_user=ec2-user private_ip=172.16.101.121
-[student1@ip-172-16-101-121 networking-workshop]$ 
+[student1@ip-172-16-101-121 networking-workshop]$
 
 ```
 
@@ -128,6 +128,3 @@ rtr1 ansible_host=52.90.196.252 ansible_ssh_user=ec2-user private_ip=172.16.165.
  - `ansible_ssh_user` - The user ansible will use to login to this host, if not configured it will default to the user the playbook is run from
  - `private_ip` - This value is not reserved by ansible so it will default to a [host variable](http://docs.ansible.com/ansible/latest/intro_inventory.html#host-variables).  This variable can be used by playbooks or ignored completely.
 - `ansible_network_os` - This variable is necessary while using the `network_cli` connection type within a play definition, as we will see shortly.
-
-
-
