@@ -1,6 +1,6 @@
 # Lab 2 - Using Ansible to update and  back up router configuration
 
-### Scenario 1 - Updating the router configurations using Ansible
+## Scenario 1 - Updating the router configurations using Ansible
 
 Using Ansible you can update the configuration of routers either by pushing a configuration file to the device or you can push configuration lines directly to the device.
 
@@ -187,7 +187,128 @@ rtr4                       : ok=1    changed=1    unreachable=0    failed=0
 ```
 
 
-### Scenario 2 - Backing up the router configuration
+#### Step 8
+
+Rather than push individual lines of configuration, an entire configuration snippet can be pushed to the devices. Create a file called `secure_router.cfg` in the same directory as your playbook and add the following lines of configuration into it:
+
+``` shell
+line con 0
+ exec-timeout 5 0
+line vty 0 4
+ exec-timeout 5 0
+ transport input ssh
+ip ssh time-out 60
+ip ssh authentication-retries 5
+service password-encryption
+service tcp-keepalives-in
+service tcp-keepalives-out 
+
+```
+
+
+#### Step 9
+
+Remember that a playbook contains a list of plays. Add a new play called `HARDEN IOS ROUTERS` to the `router_config.yml` playbook.
+
+``` yaml
+
+---
+- name: UPDATE THE SNMP RO/RW STRINGS
+  hosts: cisco
+  gather_facts: no
+  connection: network_cli
+
+  tasks:
+
+    - name: ENSURE THAT THE DESIRED SNMP STRINGS ARE PRESENT
+      ios_config:
+        commands:
+          - snmp-server community ansible-public RO
+          - snmp-server community ansible-private RW
+          - snmp-server community ansible-test RO
+
+
+- name: HARDEN IOS ROUTERS 
+  hosts: cisco
+  gather_facts: no
+  connection: network_cli
+
+
+
+```
+
+#### Step 10
+
+Add a task to this new play to push the configurations in the `secure_router.cfg` file you created in **STEP 8**
+
+
+``` yaml
+---
+- name: UPDATE THE SNMP RO/RW STRINGS
+  hosts: cisco
+  gather_facts: no
+  connection: network_cli
+
+  tasks:
+
+    - name: ENSURE THAT THE DESIRED SNMP STRINGS ARE PRESENT
+      ios_config:
+        commands:
+          - snmp-server community ansible-public RO
+          - snmp-server community ansible-private RW
+          - snmp-server community ansible-test RO
+
+
+- name: HARDEN IOS ROUTERS 
+  hosts: cisco
+  gather_facts: no
+  connection: network_cli
+
+  tasks:
+  
+    - name: ENSURE THAT ROUTERS ARE SECURE
+      ios_config:
+        src: secure_router.cfg
+```
+
+
+#### Step 11
+
+Go ahead and run the playbook.
+
+``` shell
+[student1@ip-172-16-208-140 networking-workshop]$ ansible-playbook -i lab_inventory/hosts router_config.yml  
+
+PLAY [UPDATE THE SNMP RO/RW STRINGS] ********************************************************************************************************************************************************
+
+TASK [ENSURE THAT THE DESIRED SNMP STRINGS ARE PRESENT] *************************************************************************************************************************************
+ok: [rtr3]
+ok: [rtr2]
+ok: [rtr1]
+ok: [rtr4]
+
+PLAY [HARDEN IOS ROUTERS] *******************************************************************************************************************************************************************
+
+TASK [ENSURE THAT ROUTERS ARE SECURE] *******************************************************************************************************************************************************
+changed: [rtr4]
+changed: [rtr3]
+changed: [rtr2]
+changed: [rtr1]
+
+PLAY RECAP **********************************************************************************************************************************************************************************
+rtr1                       : ok=2    changed=1    unreachable=0    failed=0   
+rtr2                       : ok=2    changed=1    unreachable=0    failed=0   
+rtr3                       : ok=2    changed=1    unreachable=0    failed=0   
+rtr4                       : ok=2    changed=1    unreachable=0    failed=0   
+
+[student1@ip-172-16-208-140 networking-workshop]$ 
+
+```
+
+n
+
+
+## Scenario 2 - Backing up the router configuration
 
 
 In this realistic scenario,  you will create a playbook to back-up Cisco router configurations. In subsequent labs we will use this backed up configuration, to restore devices to their known good state. 
