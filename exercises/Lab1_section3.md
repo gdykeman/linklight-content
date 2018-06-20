@@ -1,9 +1,9 @@
 ### Section 3 - Module documentation, Registering output & tags
 
 
-In the previous section you learned to use the `ios_facts` and the debug modules. The `debug` module had an input parameter called `msg` whereas the `ios_facts` module had no input parameters. As someone just starting out how would you know what these parameters were for a module?
+In the previous section you learned to use the `ios_facts` and the `debug` modules. The `debug` module had an input parameter called `msg` whereas the `ios_facts` module had no input parameters. As someone just starting out how would you know what these parameters were for a module?
 
-There are 2 options. 
+There are 2 options.
 
 - 1. Point your browser to https://docs.ansible.com > Network Modules and read the documentation
 
@@ -13,14 +13,14 @@ There are 2 options.
 On the control host read the documentation about the `ios_facts` module and the `debug` module.
 
 
-``` 
+```
 [student1@ip-172-16-101-121 networking-workshop]$ ansible-doc debug
 
 ```
 
 What happens when you use `debug` without specifying any parameter?
 
-``` 
+```
 [student1@ip-172-16-101-121 networking-workshop]$ ansible-doc ios_facts
 
 ```
@@ -52,8 +52,8 @@ The `ios_command` module allows you to do that. Go ahead and add another task to
     - name: DISPLAY SERIAL NUMBER
       debug:
         msg: "The serial number is:{{ ansible_net_serialnum }}"
-        
-    
+
+
     - name: COLLECT OUTPUT OF SHOW COMMANDS
       ios_command:
         commands:
@@ -61,7 +61,7 @@ The `ios_command` module allows you to do that. Go ahead and add another task to
           - show ip interface brief
 ```
 
-> Note: **commands** is a parameter required by the **ios_module**. The input to this parameter is a "list" of IOS commands. 
+> Note: **commands** is a parameter required by the **ios_module**. The input to this parameter is a "list" of IOS commands.
 
 
 
@@ -93,16 +93,16 @@ Before running the playbook, add a `tag` to the last task. Name it "show"
     - name: DISPLAY SERIAL NUMBER
       debug:
         msg: "The serial number is:{{ ansible_net_serialnum }}"
-        
-    
+
+
     - name: COLLECT OUTPUT OF SHOW COMMANDS
       ios_command:
         commands:
           - show run | i hostname
           - show ip interface brief
       tags: show
-          
-          
+
+
 ```
 
 
@@ -110,7 +110,7 @@ Before running the playbook, add a `tag` to the last task. Name it "show"
 
 Selectively run the last task within the playbook using the `--tags` option:
 
-``` 
+```
 [student1@ip-172-16-101-121 networking-workshop]$ ansible-playbook -i lab_inventory/hosts gather_ios_data.yml --tags=show
 
 PLAY [GATHER INFORMATION FROM ROUTERS] **************************************************************************
@@ -127,7 +127,7 @@ rtr2                       : ok=1    changed=0    unreachable=0    failed=0
 rtr3                       : ok=1    changed=0    unreachable=0    failed=0   
 rtr4                       : ok=1    changed=0    unreachable=0    failed=0   
 
-[student1@ip-172-16-101-121 networking-workshop]$ 
+[student1@ip-172-16-101-121 networking-workshop]$
 
 ```
 
@@ -170,7 +170,7 @@ With the `ios_facts` module, the output was automatically assigned to the `ansib
     - name: DISPLAY SERIAL NUMBER
       debug:
         msg: "The serial number is:{{ ansible_net_serialnum }}"
-        
+
     - name: COLLECT OUTPUT OF SHOW COMMANDS
       ios_command:
         commands:
@@ -178,14 +178,14 @@ With the `ios_facts` module, the output was automatically assigned to the `ansib
           - show ip interface brief
       tags: show
       register: show_output
-          
-          
+
+
 ```
 
 #### Step 7
 
 
-Add a task to use the debug module to display the content's of the `show_output` variable. Tag this task as "show" as well.
+Add a task to use the `debug` module to display the content's of the `show_output` variable. Tag this task as "show" as well.
 
 
 
@@ -207,7 +207,7 @@ Add a task to use the debug module to display the content's of the `show_output`
     - name: DISPLAY SERIAL NUMBER
       debug:
         msg: "The serial number is:{{ ansible_net_serialnum }}"
-        
+
     - name: COLLECT OUTPUT OF SHOW COMMANDS
       ios_command:
         commands:
@@ -215,13 +215,13 @@ Add a task to use the debug module to display the content's of the `show_output`
           - show ip interface brief
       tags: show
       register: show_output
-      
+
     - name: DISPLAY THE COMMAND OUTPUT
       debug:
         var: show_output
       tags: show
-          
-          
+
+
 ```
 
 > Note the use of **var** vs **msg** for the debug module.
@@ -235,7 +235,7 @@ Re-run the playbook to execute only the tasks that have been tagged. This time r
 
 
 ```
-[student1@ip-172-16-101-121 networking-workshop]$ ansible-playbook -i lab_inventory/hosts gather_ios_data.yml --tags=show 
+[student1@ip-172-16-101-121 networking-workshop]$ ansible-playbook -i lab_inventory/hosts gather_ios_data.yml --tags=show
 
 PLAY [GATHER INFORMATION FROM ROUTERS] **************************************************************************
 
@@ -248,22 +248,22 @@ ok: [rtr2]
 TASK [DISPLAY THE COMMAND OUTPUT] *******************************************************************************
 ok: [rtr4] => {
     "show_output": {
-        "changed": false, 
-        "failed": false, 
+        "changed": false,
+        "failed": false,
         "stdout": [
-            "hostname rtr4", 
+            "hostname rtr4",
             "Interface              IP-Address      OK? Method Status                Protocol\nGigabitEthernet1       172.17.231.181  YES DHCP   up                    up      \nLoopback0              192.168.4.104   YES manual up                    up      \nLoopback1              10.4.4.104      YES manual up                    up      \nTunnel0                10.101.101.4    YES manual up                    up      \nVirtualPortGroup0      192.168.35.101  YES TFTP   up                    up"
-        ], 
+        ],
         "stdout_lines": [
             [
                 "hostname rtr4"
-            ], 
+            ],
             [
-                "Interface              IP-Address      OK? Method Status                Protocol", 
-                "GigabitEthernet1       172.17.231.181  YES DHCP   up                    up      ", 
-                "Loopback0              192.168.4.104   YES manual up                    up      ", 
-                "Loopback1              10.4.4.104      YES manual up                    up      ", 
-                "Tunnel0                10.101.101.4    YES manual up                    up      ", 
+                "Interface              IP-Address      OK? Method Status                Protocol",
+                "GigabitEthernet1       172.17.231.181  YES DHCP   up                    up      ",
+                "Loopback0              192.168.4.104   YES manual up                    up      ",
+                "Loopback1              10.4.4.104      YES manual up                    up      ",
+                "Tunnel0                10.101.101.4    YES manual up                    up      ",
                 "VirtualPortGroup0      192.168.35.101  YES TFTP   up                    up"
             ]
         ]
@@ -271,7 +271,7 @@ ok: [rtr4] => {
 }
 ok: [rtr1] => {
     "show_output": {
-        "changed": false, 
+        "changed": false,
 .
 .
 .
@@ -305,7 +305,7 @@ Write a new task to display only the hostname using a debug command:
     - name: DISPLAY SERIAL NUMBER
       debug:
         msg: "The serial number is:{{ ansible_net_serialnum }}"
-        
+
     - name: COLLECT OUTPUT OF SHOW COMMANDS
       ios_command:
         commands:
@@ -313,7 +313,7 @@ Write a new task to display only the hostname using a debug command:
           - show ip interface brief
       tags: show
       register: show_output
-      
+
     - name: DISPLAY THE COMMAND OUTPUT
       debug:
         var: show_output
@@ -332,7 +332,7 @@ Re-run the playbook.
 
 
 ``` yaml
-[student1@ip-172-16-101-121 networking-workshop]$ ansible-playbook -i lab_inventory/hosts gather_ios_data.yml --tags=show 
+[student1@ip-172-16-101-121 networking-workshop]$ ansible-playbook -i lab_inventory/hosts gather_ios_data.yml --tags=show
 
 PLAY [GATHER INFORMATION FROM ROUTERS] **************************************************************************
 
@@ -345,8 +345,8 @@ ok: [rtr3]
 TASK [DISPLAY THE COMMAND OUTPUT] *******************************************************************************
 ok: [rtr2] => {
     "show_output": {
-        "changed": false, 
-        "failed": false, 
+        "changed": false,
+        "failed": false,
         "stdout": [
 .
 .
@@ -377,8 +377,7 @@ rtr2                       : ok=3    changed=0    unreachable=0    failed=0
 rtr3                       : ok=3    changed=0    unreachable=0    failed=0   
 rtr4                       : ok=3    changed=0    unreachable=0    failed=0   
 
-[student1@ip-172-16-101-121 networking-workshop]$ 
+[student1@ip-172-16-101-121 networking-workshop]$
 
 
 ```
-
