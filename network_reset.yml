@@ -22,7 +22,11 @@
 
     - name: ADD HOSTNAME
       ios_config:
-        lines:
+        commands:
           - hostname {{ inventory_hostname }}
           - no banner login
           - no banner motd
+          - no ip domain list example.net
+          - no ip domain name example.net
+          - no snmp-server community ansible-public RO
+          - no snmp-server community ansible-private RW
