@@ -4,7 +4,7 @@
 In the previous lab you learned how to backup the configuration of the 4 cisco routers. In this lab you will learn how to restore the configuration. The backups had been saved into a local directory called `backup`.
 
 
-``` 
+```
 backup
 ├── rtr1.config
 ├── rtr1_config.2018-06-07@20:36:05
@@ -23,25 +23,36 @@ Our objective is to apply this "last known good configuraion backup" to the rout
 #### Step 1
 
 
-On one of the routers (`rtr1`) manually make a change. For instance add a new loopback interface. 
+On one of the routers (`rtr1`) manually make a change. For instance add a new loopback interface.
 
 Log into `rtr1` and add the following:
 
-``` 
-rtr1#config terminal 
+```
+rtr1#conf t
 Enter configuration commands, one per line.  End with CNTL/Z.
-rtr1(config)#intefa
-rtr1(config)#inter 
-rtr1(config)#interface Loo
-rtr1(config)#interface Loopback 101
+rtr1(config)#inter
+rtr1(config)#interface loo
+rtr1(config)#interface loopback 101
 rtr1(config-if)#ip address 169.1.1.1 255.255.255.255
-rtr1(config-if)#exit
-rtr1(config)#exit
+rtr1(config-if)#end
 rtr1#
 
 ```
 
+Now verify the newly created Loopback Interface
 
+```
+rtr1#sh run interface loopback 101
+Building configuration...
+
+Current configuration : 67 bytes
+!
+interface Loopback101
+ ip address 169.1.1.1 255.255.255.255
+end
+
+rtr1#
+```
 #### Step 2
 
 Step 1 simulates our "Out of process/band" changes on the network. This change needs to be reverted. So let's write a new playbook to apply the backup we collected from our previous lab to achieve this.
@@ -60,7 +71,7 @@ Create a file called `restore_config.yml` using your favorite text editor and ad
 
 #### Step 3
 
-Write task to copy over the previously backed up configuration file to the routers.
+Write the task to copy over the previously backed up configuration file to the routers.
 
 ``` yaml
 ---
@@ -71,20 +82,20 @@ Write task to copy over the previously backed up configuration file to the route
 
   tasks:
     - name: COPY RUNNING CONFIG TO ROUTER
-      command: scp ./backup/{{inventory_hostname}}.config {{inventory_hostname}}:/{{inventory_hostname}}.config
+      command: scp ./backup/{{inventory_hostname}}.config  {{inventory_hostname}}:/{{inventory_hostname}}.config
 
 
 ```
 
-> Note the use of the **inventory_hostname** variable. For each device in the inventory file, cisco group, this task will scp over the file that corresponds to the device name onto the bootflash of the CSR devices
+> Note the use of the **inventory_hostname** variable. For each device in the inventory file under the cisco group, this task will secure copy (scp) over the file that corresponds to the device name onto the bootflash: of the CSR devices.
 
 
 #### Step 4
 
 Go ahead and run the playbook.
 
-``` 
-[student1@ip-172-16-101-121 networking-workshop]$ ansible-playbook -i lab_inventory/hosts restore.yml 
+```
+[student1@ip-172-16-101-121 networking-workshop]$ ansible-playbook -i lab_inventory/hosts restore.yml
 
 PLAY [RESTORE CONFIGURATION] *********************************************************
 
@@ -100,7 +111,7 @@ rtr2                       : ok=1    changed=1    unreachable=0    failed=0
 rtr3                       : ok=1    changed=1    unreachable=0    failed=0   
 rtr4                       : ok=1    changed=1    unreachable=0    failed=0   
 
-[student1@ip-172-16-101-121 networking-workshop]$ 
+[student1@ip-172-16-101-121 networking-workshop]$
 
 
 
@@ -111,8 +122,9 @@ rtr4                       : ok=1    changed=1    unreachable=0    failed=0
 
 Log into the routers to check that the file has been copied over
 
+> Note **rtr1.config** at the bottom of the bootflash:/ directory
 
-``` 
+```
 [student1@ip-172-16-101-121 networking-workshop]$ ssh rtr1
 
 
@@ -153,7 +165,7 @@ rtr1#
 
 #### Step 6
 
-Now that the known good config is on the destination devices, add a new task to the playbook to replace the running config with this configuraiton
+Now that the known good configuration is on the destination devices, add a new task to the playbook to replace the running configuration with the one we copied over.
 
 
 
@@ -177,16 +189,16 @@ Now that the known good config is on the destination devices, add a new task to 
 ```
 
 
-> Note: Here we take advantage of cisco's **archive** feature. The config replace will only update the differences to the router and not really a full config replace.
+> Note: Here we take advantage of Cisco's **archive** feature. The config replace will only update the differences to the router and not really a full config replace.
 
 
 #### Step 7
 
-Re-run the updated playbook:
+Let's run the updated playbook:
 
-``` 
+```
 
-[student1@ip-172-16-101-121 networking-workshop]$ ansible-playbook -i lab_inventory/hosts restore.yml 
+[student1@ip-172-16-101-121 networking-workshop]$ ansible-playbook -i lab_inventory/hosts restore.yml
 
 PLAY [RESTORE CONFIGURATION] *********************************************************
 
@@ -208,7 +220,7 @@ rtr2                       : ok=2    changed=1    unreachable=0    failed=0
 rtr3                       : ok=2    changed=1    unreachable=0    failed=0   
 rtr4                       : ok=2    changed=1    unreachable=0    failed=0   
 
-[student1@ip-172-16-101-121 networking-workshop]$ 
+[student1@ip-172-16-101-121 networking-workshop]$
 
 
 ```
@@ -226,7 +238,7 @@ Validate that the new loopback interface we added in **Step 1**  is no longer on
 
 
 
-rtr1#sh ip int bri
+rtr1#sh ip int br
 Interface              IP-Address      OK? Method Status                Protocol
 GigabitEthernet1       172.16.165.205  YES DHCP   up                    up      
 Loopback0              192.168.1.101   YES manual up                    up      
