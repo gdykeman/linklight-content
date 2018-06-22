@@ -70,17 +70,8 @@ Let's break this task down a bit. The `template` module has a `src` parameter th
 
 
 #### Step 4
+In the previous step we are rendering the generated report into a directory called `reports`. Go ahead and create this directory.
 
-The next step is to create a Jinja2 template. Ansible will look for the template file in the current working directory and within a directory called `templates` automatically. Convention/best-practice is to create the template file within the template directory. Go ahead and now create the template directory:
-
-
-``` shell
-[student1@ip-172-16-208-140 networking-workshop]$ mkdir templates
-[student1@ip-172-16-208-140 networking-workshop]$
-
-```
-
-In the previous step we are rendering the generated report into a directory called `reports`. Go ahead and create this directory as well.
 
 
 ``` shell
@@ -88,17 +79,15 @@ In the previous step we are rendering the generated report into a directory call
 [student1@ip-172-16-208-140 networking-workshop]$
 ```
 
-``` shell
-.
-├── reports
-└── templates
-
-```
 
 
 #### Step 5
 
-Using `vim`, `nano` or another text editor, go ahead and create a new file called `os_report.j2` under the `templates` directory. Add the following into the template file:
+
+The next step is to create a Jinja2 template. Ansible will look for the template file in the current working directory and within a directory called `templates` automatically. Convention/best-practice is to create the template file within the template directory. 
+
+Using `vi`, `nano` or another text editor, go ahead and create a new file called `os_report.j2` under the `templates` directory. Add the following into the template file:
+
 
 
 ``` python
