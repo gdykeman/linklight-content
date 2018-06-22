@@ -2,11 +2,6 @@
 - hosts: localhost
   gather_facts: no
 
-  # vars:
-  #   Users:
-  #   - { name: 'user1', uid: '10001' }
-  #   - { name: 'user2', uid: '10002' }
-
   tasks:
     - debug:
         msg: "{{Users[0].name}}"
