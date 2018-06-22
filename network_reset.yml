@@ -30,3 +30,17 @@
           - no ip domain name example.net
           - no snmp-server community ansible-public RO
           - no snmp-server community ansible-private RW
+          - no ip ssh authentication-retries 5
+          - no service password-encryption
+          - no service tcp-keepalives-in
+          - no service tcp-keepalives-out
+          - no ip http server
+    - ios_config:
+        parents: line con 0
+        lines:
+          - no exec-timeout 5 0
+
+    - ios_config:
+        parents: line vty 0 4
+        lines:
+          - no exec-timeout 5 0
