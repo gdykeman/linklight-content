@@ -34,7 +34,7 @@
           - no service password-encryption
           - no service tcp-keepalives-in
           - no service tcp-keepalives-out
-          - no ip http server
+          - ip http server
     - ios_config:
         parents: line con 0
         lines:
