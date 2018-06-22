@@ -10,3 +10,6 @@
   tasks:
     - debug:
         msg: "{{Users[0].name}}"
+
+    - debug:
+        msg: "{{Users[0].uid}}"
