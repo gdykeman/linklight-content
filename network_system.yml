@@ -27,3 +27,9 @@
         facility: kernel
         level: critical
       when: site_log_host is defined
+
+    - name: CONFIGURE SNMP
+      ios_config:
+        commands:
+          - snmp-server community ansible-public RO
+          - snmp-server community ansible-private RW

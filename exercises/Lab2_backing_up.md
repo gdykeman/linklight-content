@@ -1,12 +1,12 @@
-# Lab 2 - Using Ansible to update and  back up router configuration
+# Lab 2 - Using Ansible to update and  back up router configurations
 
 ## Scenario 1 - Updating the router configurations using Ansible
 
 Using Ansible you can update the configuration of routers either by pushing a configuration file to the device or you can push configuration lines directly to the device.
 
-#### Step 1 
+#### Step 1
 
-Create a new file called `router_configs.yml` (use either `vi` or `nano` on the jumphost to do this or use a local editor on your laptop and copy the contents to the jumphost later). Add the following play definition to it:
+Create a new file called `router_configs.yml` (use either `vim` or `nano` on the jumphost to do this or use a local editor on your laptop and copy the contents to the jumphost later). Add the following play definition to it:
 
 
 ``` yaml
@@ -22,7 +22,7 @@ Create a new file called `router_configs.yml` (use either `vi` or `nano` on the 
 
 Add a task to ensure that the SNMP strings `ansible-public` and `ansible-private` are present on all the routers. Use the `ios_config` module for this task
 
-> Note: For help on the **ios_config** module, use the **ansible-doc ios_config** command from the command line. This will list all possible options with usage examples.
+> Note: For help on the **ios_config** module, use the **ansible-doc ios_config** command from the command line or check docs.ansible.com. This will list all possible options with usage examples.
 
 
 ``` yaml
@@ -48,7 +48,7 @@ Add a task to ensure that the SNMP strings `ansible-public` and `ansible-private
 Run the playbook:
 
 ``` shell
-[student1@ip-172-16-208-140 networking-workshop]$ ansible-playbook -i lab_inventory/hosts router_config.yml 
+[student1@ip-172-16-208-140 networking-workshop]$ ansible-playbook -i lab_inventory/hosts router_config.yml
 
 PLAY [UPDATE THE SNMP RO/RW STRINGS] ********************************************************************
 
@@ -64,7 +64,7 @@ rtr2                       : ok=1    changed=1    unreachable=0    failed=0
 rtr3                       : ok=1    changed=1    unreachable=0    failed=0   
 rtr4                       : ok=1    changed=1    unreachable=0    failed=0   
 
-[student1@ip-172-16-208-140 networking-workshop]$ 
+[student1@ip-172-16-208-140 networking-workshop]$
 
 ```
 
@@ -93,7 +93,7 @@ rtr2                       : ok=1    changed=0    unreachable=0    failed=0
 rtr3                       : ok=1    changed=0    unreachable=0    failed=0   
 rtr4                       : ok=1    changed=0    unreachable=0    failed=0   
 
-[student1@ip-172-16-208-140 networking-workshop]$ 
+[student1@ip-172-16-208-140 networking-workshop]$
 
 
 
@@ -150,7 +150,7 @@ rtr2                       : ok=1    changed=1    unreachable=0    failed=0
 rtr3                       : ok=1    changed=1    unreachable=0    failed=0   
 rtr4                       : ok=1    changed=1    unreachable=0    failed=0   
 
-[student1@ip-172-16-208-140 networking-workshop]$ 
+[student1@ip-172-16-208-140 networking-workshop]$
 
 ```
 
@@ -183,7 +183,7 @@ rtr2                       : ok=1    changed=1    unreachable=0    failed=0
 rtr3                       : ok=1    changed=1    unreachable=0    failed=0   
 rtr4                       : ok=1    changed=1    unreachable=0    failed=0   
 
-[student1@ip-172-16-208-140 networking-workshop]$ 
+[student1@ip-172-16-208-140 networking-workshop]$
 ```
 
 
@@ -201,7 +201,7 @@ ip ssh time-out 60
 ip ssh authentication-retries 5
 service password-encryption
 service tcp-keepalives-in
-service tcp-keepalives-out 
+service tcp-keepalives-out
 
 ```
 
@@ -228,7 +228,7 @@ Remember that a playbook contains a list of plays. Add a new play called `HARDEN
           - snmp-server community ansible-test RO
 
 
-- name: HARDEN IOS ROUTERS 
+- name: HARDEN IOS ROUTERS
   hosts: cisco
   gather_facts: no
   connection: network_cli
@@ -259,13 +259,13 @@ Add a task to this new play to push the configurations in the `secure_router.cfg
           - snmp-server community ansible-test RO
 
 
-- name: HARDEN IOS ROUTERS 
+- name: HARDEN IOS ROUTERS
   hosts: cisco
   gather_facts: no
   connection: network_cli
 
   tasks:
-  
+
     - name: ENSURE THAT ROUTERS ARE SECURE
       ios_config:
         src: secure_router.cfg
@@ -301,7 +301,7 @@ rtr2                       : ok=2    changed=1    unreachable=0    failed=0
 rtr3                       : ok=2    changed=1    unreachable=0    failed=0   
 rtr4                       : ok=2    changed=1    unreachable=0    failed=0   
 
-[student1@ip-172-16-208-140 networking-workshop]$ 
+[student1@ip-172-16-208-140 networking-workshop]$
 
 ```
 
@@ -311,7 +311,7 @@ rtr4                       : ok=2    changed=1    unreachable=0    failed=0
 ## Scenario 2 - Backing up the router configuration
 
 
-In this realistic scenario,  you will create a playbook to back-up Cisco router configurations. In subsequent labs we will use this backed up configuration, to restore devices to their known good state. 
+In this realistic scenario,  you will create a playbook to back-up Cisco router configurations. In subsequent labs we will use this backed up configuration, to restore devices to their known good state.
 
 > Note: Since this is a common day 2 operation for most network teams, you can pretty much re-use most of this content for your environment with minimum changes.
 
@@ -334,7 +334,7 @@ Use the `ios_config` Ansible module to write a new task. This task should back u
 
 The `backup` parameter automatically creates a directory called `backup` within the playbook root and saves a time-stamped backup of the running configuration.
 
-> Note: Use **ansible-doc ios_config** for help on the module usage
+> Note: Use **ansible-doc ios_config** or check out **docs.ansible.com** for help on the module usage.
 
 
 ``` yaml
@@ -360,7 +360,7 @@ Why are we capturing the output of this task into a variable called `config_outp
 Go ahead and run the playbook:
 
 ``` shell
-[student1@ip-172-16-208-140 networking-workshop]$ ansible-playbook -i lab_inventory/hosts backup.yml 
+[student1@ip-172-16-208-140 networking-workshop]$ ansible-playbook -i lab_inventory/hosts backup.yml
 
 PLAY [BACKUP ROUTER CONFIGURATIONS] *********************************************************************************************************************************************************
 
@@ -376,14 +376,14 @@ rtr2                       : ok=1    changed=0    unreachable=0    failed=0
 rtr3                       : ok=1    changed=0    unreachable=0    failed=0   
 rtr4                       : ok=1    changed=0    unreachable=0    failed=0   
 
-[student1@ip-172-16-208-140 networking-workshop]$ 
+[student1@ip-172-16-208-140 networking-workshop]$
 
 ```
 
 
 #### Step 4
 
-This playbook should now have created a directory called `backup`. Now, list the contents of this directory:
+The playbook should now have created a directory called `backup`. Now, list the contents of this directory:
 
 
 ``` shell
@@ -393,20 +393,20 @@ total 1544
 -rw-rw-r--. 1 student1 student1 393513 Jun 19 12:45 rtr2_config.2018-06-19@12:45:38
 -rw-rw-r--. 1 student1 student1 390584 Jun 19 12:45 rtr3_config.2018-06-19@12:45:37
 -rw-rw-r--. 1 student1 student1 390586 Jun 19 12:45 rtr4_config.2018-06-19@12:45:37
-[student1@ip-172-16-208-140 networking-workshop]$ 
+[student1@ip-172-16-208-140 networking-workshop]$
 
 ```
 
-Feel free to open up these files using a text editor and validate their content.
+Feel free to open up these files using a text editor (`vim` & `nano` work as well) to validate their content.
 
 #### Step 5
 
-Since we will be using these backed up configurations as a source to restore the configuration, rename them to reflect the device name. 
+Since we will be using the backed up configurations as a source to restore the configuration. Let's rename them to reflect the device name.
 
 In **Step 2** you captured the output of the task into a variable called `config_output`. This variable contains the name of the backup file. Use the `copy` Ansible module to make a copy of this file.
-        
-        
-        
+
+
+
 ``` yaml
 ---
 - name: BACKUP ROUTER CONFIGURATIONS
@@ -435,7 +435,7 @@ Re-run the playbook.
 
 
 ``` shell
-[student1@ip-172-16-208-140 networking-workshop]$ ansible-playbook -i lab_inventory/hosts backup.yml 
+[student1@ip-172-16-208-140 networking-workshop]$ ansible-playbook -i lab_inventory/hosts backup.yml
 
 PLAY [BACKUP ROUTER CONFIGURATIONS] *********************************************************************************************************************************************************
 
@@ -457,7 +457,7 @@ rtr2                       : ok=2    changed=1    unreachable=0    failed=0
 rtr3                       : ok=2    changed=1    unreachable=0    failed=0   
 rtr4                       : ok=2    changed=1    unreachable=0    failed=0   
 
-[student1@ip-172-16-208-140 networking-workshop]$ 
+[student1@ip-172-16-208-140 networking-workshop]$
 
 ```
 
@@ -476,17 +476,17 @@ total 3088
 -rw-rw-r--. 1 student1 student1 390584 Jun 19 13:35 rtr3_config.2018-06-19@13:35:12
 -rw-rw-r--. 1 student1 student1 390586 Jun 19 13:35 rtr4.config
 -rw-rw-r--. 1 student1 student1 390586 Jun 19 13:35 rtr4_config.2018-06-19@13:35:13
-[student1@ip-172-16-208-140 networking-workshop]$ 
+[student1@ip-172-16-208-140 networking-workshop]$
 
 ```
 
-Observe that the directory now has the backed-up configuration with the same name as the device name.
+Notice that the directory now has another backed-up configuration but one that reflects the device's name.
 
 
 
 #### Step 8
 
-If we were to try and manually restore the contents of this file to the respective device there are 2 lines in the configuration that will raise errors:
+If we were to try and manually restore the contents of this file to the respective device there are two lines in the configuration that will raise errors:
 
 ``` shell
 Building configuration...
@@ -494,7 +494,7 @@ Building configuration...
 Current configuration with default configurations exposed : 393416 bytes
 
 ```
-These lines have to be "cleaned up" to have a restorable configuration. 
+These lines have to be "cleaned up" to have a restorable configuration.
 
 Write a new task using Ansible's `lineinfile` module to remove the first line.
 
@@ -531,7 +531,7 @@ Write a new task using Ansible's `lineinfile` module to remove the first line.
 
 #### Step 9
 
-Before we run the playbook, write one more task to remove the second line "Current configuration ...etc". Since this line has a variable entity (the number of bytes), we cannot use the `line` parameter of the `lineinfile` module. This time, use the `regexp` parameter to match regular expressions to match and remove in the file:
+Before we run the playbook, we need to add one more task to remove the second line "Current configuration ...etc". Since this line has a variable entity (the number of bytes), we cannot use the `line` parameter of the `lineinfile` module. Instead, we'll use the `regexp` parameter to match on regular expressions and remove the line in the file:
 
 
 ``` yaml
@@ -573,7 +573,7 @@ Now run the playbook.
 
 
 ``` shell
-[student1@ip-172-16-208-140 networking-workshop]$ ansible-playbook -i lab_inventory/hosts backup.yml 
+[student1@ip-172-16-208-140 networking-workshop]$ ansible-playbook -i lab_inventory/hosts backup.yml
 
 PLAY [BACKUP ROUTER CONFIGURATIONS] *********************************************************************************************************************************************************
 
@@ -607,17 +607,17 @@ rtr2                       : ok=4    changed=3    unreachable=0    failed=0
 rtr3                       : ok=4    changed=3    unreachable=0    failed=0   
 rtr4                       : ok=4    changed=3    unreachable=0    failed=0   
 
-[student1@ip-172-16-208-140 networking-workshop]$ 
+[student1@ip-172-16-208-140 networking-workshop]$
 
 ```
 
 
 #### Step 11
 
-Use an editor to view the cleaned up files. The first 2 lines that we cleaned up in the earlier tasks should be missing:
+Use an editor to view the cleaned up files. The first 2 lines that we cleaned up in the earlier tasks should be absent:
 
 ``` shell
-[student1@ip-172-16-208-140 networking-workshop]$ head -n 10 backup/rtr1.config 
+[student1@ip-172-16-208-140 networking-workshop]$ head -n 10 backup/rtr1.config
 
 !
 ! Last configuration change at 14:25:42 UTC Tue Jun 19 2018 by ec2-user
@@ -628,7 +628,7 @@ no service log backtrace
 no service config
 no service exec-callback
 no service nagle
-[student1@ip-172-16-208-140 networking-workshop]$ 
+[student1@ip-172-16-208-140 networking-workshop]$
 
 ```
 

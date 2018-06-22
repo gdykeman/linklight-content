@@ -1,7 +1,7 @@
 # Lab 4: Using Ansible to collect and report router information
 
 
-In this lab you will learn to use the `template` module to pass collected data from devices to a Jinja2 template. The template module then renders the output as a `markdown` file.
+In this lab you will learn how to use the `template` module to pass collected data from devices to a Jinja2 template. The template module then renders the output as a `markdown` file.
 
 
 
@@ -21,7 +21,7 @@ Create a new playbook called `router_report.yml` and add the following play defi
 
 #### Step 2
 
-Add a task that collects the facts using the `ios_facts` module. Recollect that we used this module in an earlier lab. 
+Add a task that collects the facts using the `ios_facts` module. Recollect that we used this module in an earlier lab.
 
 
 ``` yaml
@@ -30,11 +30,11 @@ Add a task that collects the facts using the `ios_facts` module. Recollect that 
   hosts: cisco
   connection: network_cli
   gather_facts: no
-  
+
   tasks:
     - name: GATHER ROUTER FACTS
       ios_facts:
-  
+
 ```
 
 > Recall that the **facts** modules automatically populate the **ansible_net_version** and **ansible_net_serial_number** variables within the play. You can validate this by running the playbook in verbose mode.
@@ -53,7 +53,7 @@ Rather than using debug or verbose mode to display the output on the screen, go 
   hosts: cisco
   connection: network_cli
   gather_facts: no
-  
+
   tasks:
     - name: GATHER ROUTER FACTS
       ios_facts:
@@ -70,29 +70,30 @@ Let's break this task down a bit. The `template` module has a `src` parameter th
 
 
 #### Step 4
-
-
 In the previous step we are rendering the generated report into a directory called `reports`. Go ahead and create this directory.
+
 
 
 ``` shell
 [student1@ip-172-16-208-140 networking-workshop]$ mkdir reports
-[student1@ip-172-16-208-140 networking-workshop]$ 
+[student1@ip-172-16-208-140 networking-workshop]$
 ```
 
 
 
 #### Step 5
 
+
 The next step is to create a Jinja2 template. Ansible will look for the template file in the current working directory and within a directory called `templates` automatically. Convention/best-practice is to create the template file within the template directory. 
 
 Using `vi`, `nano` or another text editor, go ahead and create a new file called `os_report.j2` under the `templates` directory. Add the following into the template file:
 
 
+
 ``` python
 
 
-{{ inventory_hostname.upper() }} 
+{{ inventory_hostname.upper() }}
 ---
 {{ ansible_net_serialnum }} : {{ ansible_net_version }}
 
@@ -100,7 +101,7 @@ Using `vi`, `nano` or another text editor, go ahead and create a new file called
 
 ```
 
-This file simply contains some of the variables we have been using in our playbooks until now. 
+This file simply contains some of the variables we have been using in our playbooks until now.
 
 > Note: Python inbuilt methods for datatypes are available natively in Jinja2 making it very easy to manipulate the formatting etc.
 
@@ -110,7 +111,7 @@ This file simply contains some of the variables we have been using in our playbo
 With this in place, go ahead and run the playbook:
 
 ``` shell
-[student1@ip-172-16-208-140 networking-workshop]$ ansible-playbook -i lab_inventory/hosts router_report.yml 
+[student1@ip-172-16-208-140 networking-workshop]$ ansible-playbook -i lab_inventory/hosts router_report.yml
 
 PLAY [GATHER INFORMATION FROM ROUTERS] ******************************************************************************************************************************************************
 
@@ -132,7 +133,7 @@ rtr2                       : ok=2    changed=1    unreachable=0    failed=0
 rtr3                       : ok=2    changed=1    unreachable=0    failed=0   
 rtr4                       : ok=2    changed=1    unreachable=0    failed=0   
 
-[student1@ip-172-16-208-140 networking-workshop]$ 
+[student1@ip-172-16-208-140 networking-workshop]$
 
 ```
 
@@ -156,14 +157,14 @@ reports/
 The contents of one of them for example:
 
 ``` shell
-[student1@ip-172-16-208-140 networking-workshop]$ cat reports/rtr4.md 
+[student1@ip-172-16-208-140 networking-workshop]$ cat reports/rtr4.md
 
 
-RTR4 
+RTR4
 ---
 9TCM27U9TQG : 16.08.01a
 
-[student1@ip-172-16-208-140 networking-workshop]$ 
+[student1@ip-172-16-208-140 networking-workshop]$
 ```
 
 
@@ -180,7 +181,7 @@ While it is nice to have the data, it would be even better to consolidate all th
   hosts: cisco
   connection: network_cli
   gather_facts: no
-  
+
   tasks:
     - name: GATHER ROUTER FACTS
       ios_facts:
@@ -211,7 +212,7 @@ Here we are using the `assemble` module. The `src` parameter specifies the direc
 Go ahead and run the playbook.
 
 ``` shell
-[student1@ip-172-16-208-140 networking-workshop]$ ansible-playbook -i lab_inventory/hosts router_report.yml 
+[student1@ip-172-16-208-140 networking-workshop]$ ansible-playbook -i lab_inventory/hosts router_report.yml
 
 PLAY [GATHER INFORMATION FROM ROUTERS] ******************************************************************************************************************************************************
 
@@ -236,7 +237,7 @@ rtr2                       : ok=2    changed=0    unreachable=0    failed=0
 rtr3                       : ok=2    changed=0    unreachable=0    failed=0   
 rtr4                       : ok=2    changed=0    unreachable=0    failed=0   
 
-[student1@ip-172-16-208-140 networking-workshop]$ 
+[student1@ip-172-16-208-140 networking-workshop]$
 
 ```
 
@@ -248,36 +249,37 @@ A new file called `network_os_report.md` will now be available in the playbook r
 
 
 ``` shell
-[student1@ip-172-16-208-140 networking-workshop]$ cat network_os_report.md 
+[student1@ip-172-16-208-140 networking-workshop]$ cat network_os_report.md
 
 
-RTR1 
+RTR1
 ---
 9YJXS2VD3Q7 : 16.08.01a
 
 
 
-RTR2 
+RTR2
 ---
 9QHUCH0VZI9 : 16.08.01a
 
 
 
-RTR3 
+RTR3
 ---
 9ZGJ5B1DL14 : 16.08.01a
 
 
 
-RTR4 
+RTR4
 ---
 9TCM27U9TQG : 16.08.01a
 
-[student1@ip-172-16-208-140 networking-workshop]$ 
+[student1@ip-172-16-208-140 networking-workshop]$
 
 ```
 
+> Note: Markdown files can be rendered visually as HTML
 
-Markdown files can be rendered visually as HTML and at this point with 3 small tasks you have an OS report on all the IOS devices in your network. This is a very basic example but the principle remaining the same, you can build status reports and dashboards that rely on the output of device show commands.
+At this point, with 3 small tasks, you have an OS report on all the IOS devices in your network. This is a simple example but the principle remains as you expand upon the capabilities.  For example, you can build status reports and dashboards that rely on the output of device show commands.
 
-Ansible provides tools and methods to extend the idea of network automation from mere configuration management to quite robust documentation and reporting as well.
+Ansible provides the tools and methods to extend network automation beyond configuration management to more robust capabilities, such as, generating documentation and or reports.

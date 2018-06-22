@@ -19,3 +19,14 @@
         domain_search: "{{ network_domain_search | default(omit) }}"
         name_servers: "{{ network_name_servers | default(omit) }}"
         state: absent
+
+    - name: ADD HOSTNAME
+      ios_config:
+        commands:
+          - hostname {{ inventory_hostname }}
+          - no banner login
+          - no banner motd
+          - no ip domain list example.net
+          - no ip domain name example.net
+          - no snmp-server community ansible-public RO
+          - no snmp-server community ansible-private RW

@@ -1,8 +1,8 @@
 ### Section 2: Writing your first playbook
 
-Now that you have a fundamental grasp of the inventory file and the group/host variables, this section will walk you through building a playbook. 
+Now that you have a fundamental grasp of the inventory file and the group/host variables, this section will walk you through building a playbook.
 
-> This section will help you understand the components of a playbook while giving you an immediate baseline for using within your own production environments!
+> This section will help you understand the components of a playbook while giving you an immediate baseline for using it within your own production environment!
 
 #### Step 1:
 
@@ -14,10 +14,13 @@ Using your favorite text editor (`vim` and `nano` are available on the control h
 >Ansible playbooks are **YAML** files. YAML is a structured encoding format that is also extremely human readable (unlike it's subset - the JSON format)
 
 #### Step 2:
+```
+[student1@ip-172-16-101-121 networking-workshop]$ vim gather_ios_data.yml
+```
 
 Enter the following play definition into `gather_ios_data.yml`:
 
-
+>Press the letter "i" to enter insert mode*
 ``` yaml
 ---
 - name: GATHER INFORMATION FROM ROUTERS
@@ -54,18 +57,18 @@ Next, add the first `task`. This task will use the `ios_facts` module to gather 
 
 Run the playbook - exit back into the command line of the control host and execute the following:
 
+>Use the write/quit method in vim to save your playbook, i.e. Esc :wq!
+
 
 ```
-[student1@ip-172-16-101-121 networking-workshop]$ ansible-playbook -i lab_inventory/hosts gather_ios_data.yml 
-
-
+[student1@ip-172-16-101-121 networking-workshop]$ ansible-playbook -i lab_inventory/hosts gather_ios_data.yml
 
 ```
 
 The output should look as follows.
 
 ```
-[student1@ip-172-16-101-121 networking-workshop]$ ansible-playbook -i lab_inventory/hosts gather_ios_data.yml 
+[student1@ip-172-16-101-121 networking-workshop]$ ansible-playbook -i lab_inventory/hosts gather_ios_data.yml
 
 PLAY [GATHER INFORMATION FROM ROUTERS] ******************************************************************
 
@@ -81,7 +84,7 @@ rtr2                       : ok=1    changed=0    unreachable=0    failed=0
 rtr3                       : ok=1    changed=0    unreachable=0    failed=0   
 rtr4                       : ok=1    changed=0    unreachable=0    failed=0   
 
-[student1@ip-172-16-101-121 networking-workshop]$ 
+[student1@ip-172-16-101-121 networking-workshop]$
 
 
 ```
@@ -95,7 +98,7 @@ The play ran successfully and executed against the 4 routers. But where is the o
 > Note: Ansible has increasing level of verbosity. You can use up to 4 "v's", -vvvv.
 
 
-``` 
+```
 student1@ip-172-16-101-121 networking-workshop]$ ansible-playbook -i lab_inventory/hosts gather_ios_data.yml  -v
 Using /home/student1/.ansible.cfg as config file
 
@@ -121,12 +124,12 @@ ok: [rtr3] => {"ansible_facts": {"ansible_net_all_ipv4_addresses": ["10.100.100.
 Ansible allows you to limit the playbook execution to a subset of the devices declared in the group, against which the play is running against. This can be done using the `--limit` flag. Rerun the above task, limiting it first to `rtr1` and then to both `rtr1` and `rtr3`
 
 
-``` 
+```
 [student1@ip-172-16-101-121 networking-workshop]$ ansible-playbook -i lab_inventory/hosts gather_ios_data.yml  -v --limit rtr1
 ```
 
 
-``` 
+```
 [student1@ip-172-16-101-121 networking-workshop]$ ansible-playbook -i lab_inventory/hosts gather_ios_data.yml  -v --limit rtr1,rtr3
 
 ```
@@ -137,7 +140,7 @@ Ansible allows you to limit the playbook execution to a subset of the devices de
 
 #### Step 7
 
-Running a playbook in verbose mode is a good option to validate the output from a task. To work with the variables within a playbook you can use the `debug` module. 
+Running a playbook in verbose mode is a good option to validate the output from a task. To work with the variables within a playbook you can use the `debug` module.
 
 Write 2 tasks that display the routers' OS version and serial number.
 
@@ -168,7 +171,7 @@ Now re-run the playbook but this time do not use the `verbose` flag and run it a
 
 ```
 
-[student1@ip-172-16-101-121 networking-workshop]$ ansible-playbook -i lab_inventory/hosts gather_ios_data.yml 
+[student1@ip-172-16-101-121 networking-workshop]$ ansible-playbook -i lab_inventory/hosts gather_ios_data.yml
 
 PLAY [GATHER INFORMATION FROM ROUTERS] ******************************************************************
 
@@ -212,13 +215,9 @@ rtr2                       : ok=3    changed=0    unreachable=0    failed=0
 rtr3                       : ok=3    changed=0    unreachable=0    failed=0   
 rtr4                       : ok=3    changed=0    unreachable=0    failed=0   
 
-[student1@ip-172-16-101-121 networking-workshop]$ 
+[student1@ip-172-16-101-121 networking-workshop]$
 
 ```
 
 
 Using less than 20 lines of "code" you have just automated version and serial number collection. Imagine if you were running this against your production network! You have actionable data in hand that does not go out of date.
-
-
-
-
