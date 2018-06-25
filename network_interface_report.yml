@@ -1,5 +1,5 @@
 ---
-- name: Dynamic Reporting
+- name: DYNAMIC REPORTING
   hosts: routers
   gather_facts: no
   connection: network_cli

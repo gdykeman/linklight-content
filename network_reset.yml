@@ -35,12 +35,15 @@
           - no service tcp-keepalives-in
           - no service tcp-keepalives-out
           - ip http server
-    - ios_config:
+
+    - name: REMOVE EXEC-TIMEOUT FOR LINE CON
+      ios_config:
         parents: line con 0
         lines:
           - no exec-timeout 5 0
 
-    - ios_config:
+    - name: REMOVE EXEC-TIMEOUT FOR VTY
+      ios_config:
         parents: line vty 0 4
         lines:
           - no exec-timeout 5 0
