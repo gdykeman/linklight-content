@@ -1,0 +1,41 @@
+---
+- name: UPGRADE ROUTER FIRMWARE
+  hosts: routers
+  connection: network_cli
+  gather_facts: no
+
+  vars:
+    #override version with what's required
+    compliant_ios_version: 16.08.01a
+
+  tasks:
+    - name: GATHER ROUTER FACTS
+      ios_facts:
+
+    - name: UPGRADE IOS IMAGE IF NOT COMPLIANT
+      block:
+      - name: COPY OVER IOS IMAGE
+        command: scp <IOS-IMAGE> ec2-user@{{inventory_hostname}}:/{{inventory_hostname}}.bin
+
+      - name: SET BOOT SYSTEM FLASH
+        ios_config:
+          commands:
+            - "boot system flash:{{inventory_hostname}}:/{{inventory_hostname}}.bin"
+
+      - name: REBOOT ROUTER
+        ios_command:
+          commands:
+            - "reload\n"
+
+      - name: WAIT FOR ROUTER TO RETURN
+        wait_for:
+          host: "{{inventory_hostname}}"
+          port: 22
+          delay: 60
+        delegate_to: localhost
+
+      - name: SHOW UPDATED VERSION
+        debug:
+          msg: "{{ ansible_net_version }}"
+
+      when: ansible_net_version != compliant_ios_version
